@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import {
   Text,
-  View
+  View,
+  StyleSheet
 } from 'react-native';
 
 import { Provider } from 'react-redux';
@@ -12,10 +13,16 @@ export default class App extends Component {
   render() {
     return (
       <Provider store={ Store } >
-        <View>
+        <View style={ styles.app }>
           <Crypto />
         </View>
       </Provider>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  app: {
+    backgroundColor: '#222'
+  }
+})
