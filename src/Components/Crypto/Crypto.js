@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import {
   Text,
   View,
+  FlatList,
+  Dimensions,
   StyleSheet
 } from 'react-native';
 
@@ -26,7 +28,8 @@ export default class Crypto extends Component {
       const valuesArray = value.split("~");
       const arrayLength = valuesArray.length;
       if (arrayLength === 11 || arrayLength === 12 || arrayLength === 16) {
-        console.log('aallskdj lenght in if ', arrayLength)
+        console.log({valuesArray})
+        
         let socketObject = {}
         switch (arrayLength) {
           case 11:
@@ -52,9 +55,9 @@ export default class Crypto extends Component {
         }  
         if (arrayLength === 11 || arrayLength === 12 || arrayLength === 16) {
           if (this.state.data.price !== socketObject.price) {
-            this.setState({
-              data: socketObject
-            })
+            // this.setState({
+            //   data: socketObject
+            // })
           }
         }
       }
@@ -74,25 +77,19 @@ export default class Crypto extends Component {
       }
     })
 
-    console.log('state ', this.state.data)
-
-    // need to use FlatlList
-    if (CryptoData !== []) {
-      mappedCoins = CryptoData.map( coin => (
-        <View key={ coin.symbol } style={ styles.symbolPrice }>
-          <Text style={ styles.txtStyle }>{ coin.name }</Text>
-          <Text style={ styles.txtStyle }>{ coin.price_usd }</Text>
-        </View>
-      ))
-    }
-
     return (
         <View style={ styles.container }>
           <Text style={ styles.header }> Token Tracker </Text>
-          <View style={ styles.symbolPrice }>
-            <Text style={ styles.txtStyle }>{from}>{to}</Text>
-            <Text style={ styles.txtStyle }>{price}</Text>
-          </View>
+          <FlatList data={ CryptoData }
+                    renderItem={ coin => (
+                      <View key={ coin.symbol } style={ styles.symbolPrice }>
+                        <Text style={ styles.nameTxt }>{ coin.item.name }</Text>
+                        <Text style={ coin.item.percent_change_24h > 0
+                          ?
+                          styles.greenTxt : styles.redTxt }>{ coin.item.price_usd }</Text>
+                      </View>
+                    )}
+                    keyExtractor={ coin => coin.symbol } />
         </View>
     );
   }
@@ -113,11 +110,26 @@ const styles = StyleSheet.create({
   symbolPrice: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    margin: 20
+    height: Dimensions.get('window').height/20,
+    width: Dimensions.get('window').width,
+    marginBottom: 20,
+    paddingLeft: 10,
+    paddingRight: 10
   },
 
-  txtStyle: {
-    color: '#f2f2f2'
+  greenTxt: {
+    color: '#27FF93',
+    fontSize: 17
+  },
+
+  redTxt: {
+    color: '#FF2727',
+    fontSize: 17
+  },
+
+  nameTxt: {
+    color: '#f2f2f2',
+    fontSize: 17
   }
 
 })
