@@ -14,21 +14,28 @@ export default class Crypto extends Component {
     super()
 
     this.state = {
-      data: {}
+      data: []
     }
 
     this.unpack = this.unpack.bind(this)
   }
 
-  componentDidMount() {    
+  componentDidMount() {
     this.props.getCryptoData()
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log({nextProps})
+    this.setState({
+      data: nextProps.CryptoData[1]
+    })
   }
 
   unpack = value => {
       const valuesArray = value.split("~");
       const arrayLength = valuesArray.length;
       if (arrayLength === 11 || arrayLength === 12 || arrayLength === 16) {
-        console.log({valuesArray})
+        // console.log({valuesArray})
         
         let socketObject = {}
         switch (arrayLength) {
@@ -55,9 +62,9 @@ export default class Crypto extends Component {
         }  
         if (arrayLength === 11 || arrayLength === 12 || arrayLength === 16) {
           if (this.state.data.price !== socketObject.price) {
-            // this.setState({
-            //   data: socketObject
-            // })
+            this.setState({
+              data: Object.assign(this.state.data, {price_usd: socketObject.price})
+            })
           }
         }
       }
@@ -65,22 +72,24 @@ export default class Crypto extends Component {
 
   render() {
     const { CryptoData } = this.props;
-    const { from, to, price } = this.state.data;
+    // console.log('state', this.state)
     let mappedCoins;
-    const socket = io.connect('wss://streamer.cryptocompare.com');
+    // const socket = io.connect('wss://streamer.cryptocompare.com');
+    const socket = io.connect('wss://socket.bittrex.com/signalr');
     const subscription = ['5~CCCAGG~ETH~USD'];
-    socket.emit('SubAdd', { subs: subscription });
-    socket.on('m', message => {
-      const messageType = message.substring(0, message.indexOf("~"));
-      if (messageType == 5) {
-        this.unpack(message)
-      }
-    })
+    console.log({socket})
+    // socket.emit('SubAdd', { subs: subscription });
+    // socket.on('m', message => {
+    //   const messageType = message.substring(0, message.indexOf("~"));
+    //   if (messageType == 5) {
+    //     this.unpack(message)
+    //   }
+    // })
 
     return (
         <View style={ styles.container }>
           <Text style={ styles.header }> Token Tracker </Text>
-          <FlatList data={ CryptoData }
+          {/* <FlatList data={ CryptoData }
                     renderItem={ coin => (
                       <View key={ coin.symbol } style={ styles.symbolPrice }>
                         <Text style={ styles.nameTxt }>{ coin.item.name }</Text>
@@ -89,7 +98,13 @@ export default class Crypto extends Component {
                           styles.greenTxt : styles.redTxt }>{ coin.item.price_usd }</Text>
                       </View>
                     )}
-                    keyExtractor={ coin => coin.symbol } />
+                    keyExtractor={ coin => coin.symbol } /> */}
+                    <View style={ styles.symbolPrice }>
+                        <Text style={ styles.nameTxt }>{ this.state.data.name }</Text>
+                        <Text style={ this.state.data.percent_change_24h > 0
+                          ?
+                          styles.greenTxt : styles.redTxt }>{ this.state.data.price_usd }</Text>
+                      </View>
         </View>
     );
   }

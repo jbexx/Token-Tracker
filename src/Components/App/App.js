@@ -23,6 +23,6 @@ export default class App extends Component {
 
 const styles = StyleSheet.create({
   app: {
-    backgroundColor: '#222'
+    backgroundColor: '#171717'
   }
 })
