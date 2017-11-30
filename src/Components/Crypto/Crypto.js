@@ -7,7 +7,8 @@ import {
   StyleSheet
 } from 'react-native';
 
-import io from 'socket.io-client';
+const autobahn = require('autobahn');
+const wsuri = "wss://api.poloniex.com";
 
 export default class Crypto extends Component {
   constructor() {
@@ -18,6 +19,7 @@ export default class Crypto extends Component {
     }
 
     this.unpack = this.unpack.bind(this)
+    this.gatherTokens = this.gatherTokens.bind(this)
   }
 
   componentDidMount() {
@@ -26,8 +28,14 @@ export default class Crypto extends Component {
 
   componentWillReceiveProps(nextProps) {
     console.log({nextProps})
+    this.gatherTokens(nextProps, 'USDT')
+  }
+
+  gatherTokens = (base, currency) => {
+    const tokenKeys = Object.keys(base.CryptoData);
+    const wantedTokens = tokenKeys.filter( token => token.split('_')[0] === currency)
     this.setState({
-      data: nextProps.CryptoData[1]
+      data: wantedTokens.map( token => Object.assign({}, { pair: token }, base.CryptoData[token]))
     })
   }
 
@@ -71,13 +79,10 @@ export default class Crypto extends Component {
   };
 
   render() {
+    console.log('state ', this.state)
     const { CryptoData } = this.props;
-    // console.log('state', this.state)
-    let mappedCoins;
     // const socket = io.connect('wss://streamer.cryptocompare.com');
-    const socket = io.connect('wss://socket.bittrex.com/signalr');
-    const subscription = ['5~CCCAGG~ETH~USD'];
-    console.log({socket})
+    // const subscription = ['5~CCCAGG~ETH~USD'];
     // socket.emit('SubAdd', { subs: subscription });
     // socket.on('m', message => {
     //   const messageType = message.substring(0, message.indexOf("~"));
@@ -86,25 +91,48 @@ export default class Crypto extends Component {
     //   }
     // })
 
+    const connection = new autobahn.Connection({
+        url: wsuri,
+        realm: "realm1"
+      });
+    
+    connection.onopen = session => {
+      const marketEvent = (args, kwargs) => {
+        console.log('args: ', args);
+        args.forEach( arg => {
+          if (arg.type !== 'newTrade') {
+            if (arg.data.type === 'bid') {
+                // this.state.chartData.datasets[0].data.push(arg.data.amount)
+                // this.setState({
+                //   chartData: this.state.chartData
+                // })
+            }
+          }
+        });
+      }
+      session.subscribe('BTC_ETH', marketEvent);
+    }
+    
+    connection.onclose = () => {
+      console.log("Websocket connection closed");
+    }
+    
+    connection.open();
+
     return (
         <View style={ styles.container }>
           <Text style={ styles.header }> Token Tracker </Text>
-          {/* <FlatList data={ CryptoData }
-                    renderItem={ coin => (
-                      <View key={ coin.symbol } style={ styles.symbolPrice }>
-                        <Text style={ styles.nameTxt }>{ coin.item.name }</Text>
-                        <Text style={ coin.item.percent_change_24h > 0
+          <FlatList data={ this.state.data }
+                    renderItem={ coin => {console.log({coin}) 
+                    return(
+                      <View style={ styles.symbolPrice }>
+                        <Text style={ styles.nameTxt }>{ coin.item.pair }</Text>
+                        <Text style={ coin.item.percentChange > 0
                           ?
-                          styles.greenTxt : styles.redTxt }>{ coin.item.price_usd }</Text>
+                          styles.greenTxt : styles.redTxt }>{ coin.item.last }</Text>
                       </View>
-                    )}
-                    keyExtractor={ coin => coin.symbol } /> */}
-                    <View style={ styles.symbolPrice }>
-                        <Text style={ styles.nameTxt }>{ this.state.data.name }</Text>
-                        <Text style={ this.state.data.percent_change_24h > 0
-                          ?
-                          styles.greenTxt : styles.redTxt }>{ this.state.data.price_usd }</Text>
-                      </View>
+                    )}}
+                    keyExtractor={ coin => coin.pair } />
         </View>
     );
   }
