@@ -7,8 +7,8 @@ import {
   StyleSheet
 } from 'react-native';
 
-const autobahn = require('autobahn');
-const wsuri = "wss://api.poloniex.com";
+const io = require('socket.io-client')('wss://api.poloniex.com');
+require('socket.io-wamp')(io);
 
 export default class Crypto extends Component {
   constructor() {
@@ -79,59 +79,26 @@ export default class Crypto extends Component {
   };
 
   render() {
-    console.log('state ', this.state)
     const { CryptoData } = this.props;
-    // const socket = io.connect('wss://streamer.cryptocompare.com');
-    // const subscription = ['5~CCCAGG~ETH~USD'];
-    // socket.emit('SubAdd', { subs: subscription });
-    // socket.on('m', message => {
-    //   const messageType = message.substring(0, message.indexOf("~"));
-    //   if (messageType == 5) {
-    //     this.unpack(message)
-    //   }
-    // })
 
-    const connection = new autobahn.Connection({
-        url: wsuri,
-        realm: "realm1"
-      });
-    
-    connection.onopen = session => {
-      const marketEvent = (args, kwargs) => {
-        console.log('args: ', args);
-        args.forEach( arg => {
-          if (arg.type !== 'newTrade') {
-            if (arg.data.type === 'bid') {
-                // this.state.chartData.datasets[0].data.push(arg.data.amount)
-                // this.setState({
-                //   chartData: this.state.chartData
-                // })
-            }
-          }
-        });
-      }
-      session.subscribe('BTC_ETH', marketEvent);
-    }
-    
-    connection.onclose = () => {
-      console.log("Websocket connection closed");
-    }
-    
-    connection.open();
+    const socket = io.connect();
+    console.log({socket})
+    socket.on('connect', client => {
+      console.log({client})
+    })
 
     return (
         <View style={ styles.container }>
           <Text style={ styles.header }> Token Tracker </Text>
           <FlatList data={ this.state.data }
-                    renderItem={ coin => {console.log({coin}) 
-                    return(
+                    renderItem={ coin => (
                       <View style={ styles.symbolPrice }>
                         <Text style={ styles.nameTxt }>{ coin.item.pair }</Text>
                         <Text style={ coin.item.percentChange > 0
                           ?
                           styles.greenTxt : styles.redTxt }>{ coin.item.last }</Text>
                       </View>
-                    )}}
+                    )}
                     keyExtractor={ coin => coin.pair } />
         </View>
     );
