@@ -89,7 +89,7 @@ export default class Crypto extends Component {
 
     return (
         <View style={ styles.container }>
-          <StatusBar hidden={ true }/>
+          <StatusBar barStyle={ 'light-content' }/>
           <Text style={ styles.header }> Token Tracker </Text>
           <FlatList data={ CryptoData }
                     renderItem={ coin => {console.log({coin})
