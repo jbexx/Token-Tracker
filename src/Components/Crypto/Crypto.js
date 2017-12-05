@@ -7,8 +7,8 @@ import {
   StyleSheet
 } from 'react-native';
 
-const io = require('socket.io-client')('wss://api.poloniex.com');
-require('socket.io-wamp')(io);
+// const io = require('socket.io-client')('wss://api.poloniex.com');
+// require('socket.io-wamp')(io);
 
 export default class Crypto extends Component {
   constructor() {
@@ -19,7 +19,7 @@ export default class Crypto extends Component {
     }
 
     this.unpack = this.unpack.bind(this)
-    this.gatherTokens = this.gatherTokens.bind(this)
+    // this.gatherTokens = this.gatherTokens.bind(this)
   }
 
   componentDidMount() {
@@ -28,16 +28,16 @@ export default class Crypto extends Component {
 
   componentWillReceiveProps(nextProps) {
     console.log({nextProps})
-    this.gatherTokens(nextProps, 'USDT')
+    // this.gatherTokens(nextProps, 'USDT')
   }
 
-  gatherTokens = (base, currency) => {
-    const tokenKeys = Object.keys(base.CryptoData);
-    const wantedTokens = tokenKeys.filter( token => token.split('_')[0] === currency)
-    this.setState({
-      data: wantedTokens.map( token => Object.assign({}, { pair: token }, base.CryptoData[token]))
-    })
-  }
+  // gatherTokens = (base, currency) => {
+  //   const tokenKeys = Object.keys(base.CryptoData);
+  //   const wantedTokens = tokenKeys.filter( token => token.split('_')[0] === currency)
+  //   this.setState({
+  //     data: wantedTokens.map( token => Object.assign({}, { pair: token }, base.CryptoData[token]))
+  //   })
+  // }
 
   unpack = value => {
       const valuesArray = value.split("~");
@@ -81,25 +81,26 @@ export default class Crypto extends Component {
   render() {
     const { CryptoData } = this.props;
 
-    const socket = io.connect();
-    console.log({socket})
-    socket.on('connect', client => {
-      console.log({client})
-    })
+    // const socket = io.connect();
+    // socket.on('connect', client => {
+    //   console.log({client})
+    // })
 
     return (
         <View style={ styles.container }>
           <Text style={ styles.header }> Token Tracker </Text>
-          <FlatList data={ this.state.data }
-                    renderItem={ coin => (
+          <FlatList data={ CryptoData }
+                    renderItem={ coin => {console.log({coin})
+                    return(
+                      
                       <View style={ styles.symbolPrice }>
-                        <Text style={ styles.nameTxt }>{ coin.item.pair }</Text>
-                        <Text style={ coin.item.percentChange > 0
+                        <Text style={ styles.nameTxt }>{ coin.item.name }</Text>
+                        <Text style={ coin.item.percent_change_24h > 0
                           ?
-                          styles.greenTxt : styles.redTxt }>{ coin.item.last }</Text>
+                          styles.greenTxt : styles.redTxt }>{ coin.item.price_usd }</Text>
                       </View>
-                    )}
-                    keyExtractor={ coin => coin.pair } />
+                    )}}
+                    keyExtractor={ coin => coin.id } />
         </View>
     );
   }
