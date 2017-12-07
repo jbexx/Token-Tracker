@@ -12,6 +12,12 @@ export default class Search extends Component {
     this.state = {
       text: 'Search'
     }
+
+    this.updateTokens = this.updateTokens.bind(this);
+  }
+
+  updateTokens = () => {
+    
   }
 
   render() {

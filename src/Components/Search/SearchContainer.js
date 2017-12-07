@@ -1,8 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { getCryptoData, setStore } from '../../Actions/actions';
-import Crypto from '../Crypto/Crypto';
+import Search from './Search';
 
 const mapStateToProps = state => {
   return {
@@ -12,9 +11,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(
-    { getCryptoData },
-    dispatch
-  );
+    
+  )
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Crypto);
+export default connect(mapStateToProps, mapDispatchToProps)(Search);

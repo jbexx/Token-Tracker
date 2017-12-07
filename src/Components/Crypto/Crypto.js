@@ -8,7 +8,7 @@ import {
   StyleSheet
 } from 'react-native';
 
-import Search from '../Search/Search';
+import Search from '../Search/SearchContainer';
 
 import io from 'socket.io-client';
 
