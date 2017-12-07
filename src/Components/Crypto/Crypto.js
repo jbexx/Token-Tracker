@@ -8,8 +8,9 @@ import {
   StyleSheet
 } from 'react-native';
 
-// const io = require('socket.io-client')('wss://api.poloniex.com');
-// require('socket.io-wamp')(io);
+import Search from '../Search/Search';
+
+import io from 'socket.io-client';
 
 export default class Crypto extends Component {
   constructor() {
@@ -21,6 +22,7 @@ export default class Crypto extends Component {
 
     this.unpack = this.unpack.bind(this)
     // this.gatherTokens = this.gatherTokens.bind(this)
+    // this.searchTokens = this.searchTokens.bind(this)
   }
 
   componentDidMount() {
@@ -44,7 +46,7 @@ export default class Crypto extends Component {
       const valuesArray = value.split("~");
       const arrayLength = valuesArray.length;
       if (arrayLength === 11 || arrayLength === 12 || arrayLength === 16) {
-        // console.log({valuesArray})
+        console.log({valuesArray})
         
         let socketObject = {}
         switch (arrayLength) {
@@ -82,26 +84,36 @@ export default class Crypto extends Component {
   render() {
     const { CryptoData } = this.props;
 
-    // const socket = io.connect();
-    // socket.on('connect', client => {
-    //   console.log({client})
+    const socket = new WebSocket('wss://streamer.cryptocompare.com');
+
+    socket.addEventListener('message', function (event) {
+      console.log('Message from server ', event.data);
+  });
+    // const socket = io.connect('wss://streamer.cryptocompare.com');
+    // const subscription = ['5~CCCAGG~ETH~USD'];
+    // console.log({socket})
+    // socket.emit('SubAdd', { subs: subscription });
+    // socket.on('m', message => {
+    //   const messageType = message.substring(0, message.indexOf("~"));
+    //   if (messageType == 5) {
+    //     this.unpack(message)
+    //   }
     // })
 
     return (
         <View style={ styles.container }>
           <StatusBar barStyle={ 'light-content' }/>
           <Text style={ styles.header }> Token Tracker </Text>
+          <Search/>
           <FlatList data={ CryptoData }
-                    renderItem={ coin => {console.log({coin})
-                    return(
-                      
+                    renderItem={ coin => (
                       <View style={ styles.symbolPrice }>
                         <Text style={ styles.nameTxt }>{ coin.item.name }</Text>
                         <Text style={ coin.item.percent_change_24h > 0
                           ?
                           styles.greenTxt : styles.redTxt }>{ coin.item.price_usd }</Text>
                       </View>
-                    )}}
+                    )}
                     keyExtractor={ coin => coin.id } />
         </View>
     );
