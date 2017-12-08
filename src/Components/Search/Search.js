@@ -18,6 +18,7 @@ export default class Search extends Component {
 
     this.trie = {}
     this.updateTokens = this.updateTokens.bind(this);
+    this.searchTokens = this.searchTokens.bind(this);
   }
 
   // create an action that will update cryptodata in store
@@ -33,25 +34,57 @@ export default class Search extends Component {
     this.trie = trie
   }
 
+  searchTokens = () => {
+    let newData = [];
+    let i1 = 0;
+    let i2 = 0;
+    const i1Length = this.props.CryptoData.length;
+    const i2Length = this.state.suggestions.length;
+
+    while (i1 < i1Length) {
+      console.log('the word ', this.state.suggestions[i2].toLowerCase())
+      
+      while (this.props.CryptoData[i1].name.toLowerCase() !== this.state.suggestions[i2].toLowerCase()) {
+        i2++
+        if (i2 >= i2Length) {
+          i1++
+          i2 = 0
+        }
+      }
+      
+      if (this.props.CryptoData[i1].name.toLowerCase() === this.state.suggestions[i2].toLowerCase()) {
+        newData.push(this.props.CryptoData[i2])
+      }
+    }
+
+    console.log({newData})
+    // this.props.updateStore(newData)    
+  }
+
   updateTokens = value => {
     const suggestions = this.trie.suggest(value)
     this.setState({ 
       text: value,
       suggestions
     })
-    
-    let newData = [];
 
-
-    for (let j = 0; j < this.props.CryptoData.length; j++) {
-      for (let i = 0; i < this.state.suggestions.length; i++) {
-        if (this.props.CryptoData[j].name.toLowerCase() === this.state.suggestions[i].toLowerCase()) {
-          newData.push(this.props.CryptoData[j])
-        }
-      }
+    if (this.state.suggestions.length) {
+      this.searchTokens()
     }
-    console.log({newData})
-    this.props.updateStore(newData)
+    
+    
+
+
+
+    // for (let j = 0; j < this.props.CryptoData.length; j++) {
+    //   for (let i = 0; i < this.state.suggestions.length; i++) {
+    //     if (this.props.CryptoData[j].name.toLowerCase() === this.state.suggestions[i].toLowerCase()) {
+    //       newData.push(this.props.CryptoData[j])
+    //     }
+    //   }
+    // }
+
+    // this.props.updateStore(newData)
   }
 
   render() {
