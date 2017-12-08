@@ -35,16 +35,23 @@ export default class Search extends Component {
   }
 
   searchTokens = () => {
+    const { CryptoData } = this.props;
+    const { suggestions } = this.state;
     let newData = [];
     let i1 = 0;
     let i2 = 0;
-    const i1Length = this.props.CryptoData.length;
-    const i2Length = this.state.suggestions.length;
+    let counter = 0;
+    const i1Length = CryptoData.length;
+    const i2Length = suggestions.length;
 
-    while (i1 < i1Length) {
-      console.log('the word ', this.state.suggestions[i2].toLowerCase())
+    while (i1 < i1Length ) {
+      counter++
+      console.log('the number ', i1)
+      console.log('the token ', CryptoData[i1].name.toLowerCase())
+      console.log('i2 length', i2Length)
+      console.log('newdata length', newData.length)
       
-      while (this.props.CryptoData[i1].name.toLowerCase() !== this.state.suggestions[i2].toLowerCase()) {
+      while (CryptoData[i1].name.toLowerCase() !== suggestions[i2].toLowerCase()) {
         i2++
         if (i2 >= i2Length) {
           i1++
@@ -52,12 +59,22 @@ export default class Search extends Component {
         }
       }
       
-      if (this.props.CryptoData[i1].name.toLowerCase() === this.state.suggestions[i2].toLowerCase()) {
-        newData.push(this.props.CryptoData[i2])
+      // while (i2Length) {
+        if (CryptoData[i1].name.toLowerCase() === suggestions[i2].toLowerCase()) {
+          newData.push(CryptoData[i1])
+          i2++
+        }
+      // }
+
+      if (newData.length >= i2Length) {
+      console.log('newdata length when return', newData.length)
+      
+        console.log({counter})
+        return newData
       }
     }
 
-    console.log({newData})
+    // console.log({newData})
     // this.props.updateStore(newData)    
   }
 
@@ -66,11 +83,13 @@ export default class Search extends Component {
     this.setState({ 
       text: value,
       suggestions
-    })
+    },
+    () => {
+      console.log('search tokens ', this.searchTokens())})
 
-    if (this.state.suggestions.length) {
-      this.searchTokens()
-    }
+    // if (this.state.suggestions.length) {
+    //   console.log('search tokens ', this.searchTokens())
+    // }
     
     
 
