@@ -1,6 +1,6 @@
-const crypto = (state = [], action) => {
+const filteredTokens = (state = [], action) => {
   switch (action.type) {
-    case 'CRYPTODATA':
+    case 'UPDATEDCRYPTO':
       return action.data
 
     default:
@@ -9,4 +9,4 @@ const crypto = (state = [], action) => {
   return state;
 }
 
-export default crypto
+export default filteredTokens

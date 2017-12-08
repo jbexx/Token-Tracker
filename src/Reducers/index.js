@@ -1,6 +1,8 @@
 import { combineReducers } from 'redux';
-import CryptoReducer from './CryptoReducer';
+import tokens from './CryptoReducer';
+import filteredTokens from './SearchReducer';
 
 export default combineReducers({
-  crypto: CryptoReducer
+  tokens,
+  filteredTokens
 })

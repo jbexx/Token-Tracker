@@ -6,7 +6,8 @@ import Search from './Search';
 
 const mapStateToProps = state => {
   return {
-    CryptoData: state.crypto
+    CryptoData: state.tokens,
+    filteredTokens: state.filteredTokens
   }
 };
 

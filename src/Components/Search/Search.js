@@ -39,8 +39,19 @@ export default class Search extends Component {
       text: value,
       suggestions
     })
+    
+    let newData = [];
 
-    this.props.updateStore()
+
+    for (let j = 0; j < this.props.CryptoData.length; j++) {
+      for (let i = 0; i < this.state.suggestions.length; i++) {
+        if (this.props.CryptoData[j].name.toLowerCase() === this.state.suggestions[i].toLowerCase()) {
+          newData.push(this.props.CryptoData[j])
+        }
+      }
+    }
+    console.log({newData})
+    this.props.updateStore(newData)
   }
 
   render() {
@@ -48,10 +59,11 @@ export default class Search extends Component {
     return (
       <View>
         <TextInput style={ styles.searchBox }
+                   onFocus={ () => this.setState({ text: '' }) }
                    onChangeText={ text => this.updateTokens(text) }
                    value={ this.state.text }
                    editable={ true }
-                   maxLength={ 40 } />
+                   maxLength={ 20 } />
       </View>
     )
   }

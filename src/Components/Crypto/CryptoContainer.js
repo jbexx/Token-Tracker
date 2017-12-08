@@ -6,7 +6,8 @@ import Crypto from '../Crypto/Crypto';
 
 const mapStateToProps = state => {
   return {
-    CryptoData: state.crypto
+    CryptoData: state.tokens,
+    filteredTokens: state.filteredTokens
   }
 };
 
