@@ -25,12 +25,12 @@ export default class Crypto extends Component {
     // this.searchTokens = this.searchTokens.bind(this)
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this.props.getCryptoData()
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log({nextProps})
+    // console.log({nextProps})
     // this.gatherTokens(nextProps, 'USDT')
   }
 
@@ -87,7 +87,6 @@ export default class Crypto extends Component {
     const socket = new WebSocket('wss://streamer.cryptocompare.com');
 
     socket.addEventListener('message', function (event) {
-      console.log('Message from server ', event.data);
   });
     // const socket = io.connect('wss://streamer.cryptocompare.com');
     // const subscription = ['5~CCCAGG~ETH~USD'];

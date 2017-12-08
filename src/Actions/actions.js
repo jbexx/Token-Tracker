@@ -1,6 +1,13 @@
-export const setStore = (data) => {
+export const setStore = data => {
   return {
     type: 'CRYPTODATA',
+    data
+  }
+}
+
+export const updateStore = data => {
+  return {
+    type: 'UPDATEDCRYPTO',
     data
   }
 }
@@ -13,5 +20,3 @@ export const getCryptoData = () => {
     .catch( error => console.log(error))
   }
 }
-
-// https://poloniex.com/public?command=returnTicker

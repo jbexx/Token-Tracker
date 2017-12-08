@@ -6,25 +6,49 @@ import {
   Dimensions
 } from 'react-native';
 
+import Trie from '../../utils/trie';
+
 export default class Search extends Component {
   constructor() {
     super()
     this.state = {
-      text: 'Search'
+      text: 'Search',
+      suggestions: []
     }
 
+    this.trie = {}
     this.updateTokens = this.updateTokens.bind(this);
   }
 
-  updateTokens = () => {
-    
+  // create an action that will update cryptodata in store
+  // with filtered results from this.trie.suggest()
+  // want action to send updated / filtered array of store
+  // and then set that new array to store as the new cryptodata
+
+  componentWillReceiveProps(nextprops) {
+    const trie = new Trie()
+    trie.populate(
+      nextprops.CryptoData.map( token => token.name )
+    )
+    this.trie = trie
+  }
+
+  updateTokens = value => {
+    const suggestions = this.trie.suggest(value)
+    this.setState({ 
+      text: value,
+      suggestions
+    })
+
+    this.props.updateStore()
   }
 
   render() {
+    console.log('state ', this.state)
     return (
       <View>
         <TextInput style={ styles.searchBox }
-                   onChangeText={ text => this.setState({ text })}
+                   onChangeText={ text => this.updateTokens(text) }
                    value={ this.state.text }
                    editable={ true }
                    maxLength={ 40 } />
