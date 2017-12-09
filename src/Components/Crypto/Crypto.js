@@ -30,7 +30,7 @@ export default class Crypto extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    // console.log({nextProps})
+    console.log({nextProps})
     // this.gatherTokens(nextProps, 'USDT')
   }
 
@@ -105,7 +105,7 @@ export default class Crypto extends Component {
           <StatusBar barStyle={ 'light-content' }/>
           <Text style={ styles.header }> Token Tracker </Text>
           <Search/>
-          <FlatList data={ filteredTokens ? filteredTokens : CryptoData }
+          <FlatList data={ filteredTokens.length > 0 ? filteredTokens : CryptoData }
                     renderItem={ coin => (
                       <View style={ styles.symbolPrice }>
                         <Text style={ styles.nameTxt }>{ coin.item.name }</Text>

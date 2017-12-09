@@ -32,20 +32,26 @@ export default class Search extends Component {
   searchTokens = () => {
     const { CryptoData, updateStore } = this.props;
     const { suggestions } = this.state;
+    const sortedData = CryptoData.sort( (a, b) => {
+      if (a.id < b.id) { return -1 }
+      if (a.id > b.id) { return 1 }
+      return 0
+    });
+    const sortedSug = suggestions.sort() || []
     const newData = [];
     let i1 = 0;
     let i2 = 0;
     const i1Length = CryptoData.length;
-    const i2Length = suggestions.length;
+    const i2Length = sortedSug.length;
 
     if (i2Length) {
 
-      while (CryptoData[i1].name.toLowerCase() !== suggestions[i2].toLowerCase() && i1 < i1Length) {
+      while (sortedData[i1].name.toLowerCase() !== sortedSug[i2].toLowerCase() && i1 < i1Length) {
         i1++
-
-        if (CryptoData[i1].name.toLowerCase() === suggestions[i2].toLowerCase()) {
+        counter++
+        
+        if (sortedData[i1].name.toLowerCase() === sortedSug[i2].toLowerCase()) {
           newData.push(CryptoData[i1])
-          i1 = 0
           i2++
         }
 
