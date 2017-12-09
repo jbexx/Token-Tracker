@@ -43,30 +43,37 @@ export default class Search extends Component {
     let counter = 0;
     const i1Length = CryptoData.length;
     const i2Length = suggestions.length;
+    console.log('i2 length out of while', i2Length)
+    
 
-    while (i1 < i1Length ) {
+    while (i1 < i1Length && i2Length ) {
       counter++
-      console.log('the number ', i1)
-      console.log('the token ', CryptoData[i1].name.toLowerCase())
+      // console.log('i1 ', i1)
+      console.log('i2 ', i2)
+      // console.log('the array ', CryptoData[100])
+      // console.log('the token ', CryptoData[i1].name.toLowerCase())
       console.log('i2 length', i2Length)
-      console.log('newdata length', newData.length)
-      
+      // console.log('newdata length', newData.length)
+      // console.log('undefined? ', i1Length)
+      console.log('sgstn at i2 ', suggestions[i2].toLowerCase())
+
       while (CryptoData[i1].name.toLowerCase() !== suggestions[i2].toLowerCase()) {
         i2++
-        if (i2 >= i2Length) {
+        if (i2 > i2Length) {
           i1++
           i2 = 0
         }
+        break;
       }
       
-      // while (i2Length) {
-        if (CryptoData[i1].name.toLowerCase() === suggestions[i2].toLowerCase()) {
-          newData.push(CryptoData[i1])
-          i2++
-        }
-      // }
+      while (CryptoData[i1].name.toLowerCase() === suggestions[i2].toLowerCase()) {
+        newData.push(CryptoData[i1])
+        i1++
+        i2 = 0
+        break;
+      }
 
-      if (newData.length >= i2Length) {
+      if (newData.length === i2Length) {
       console.log('newdata length when return', newData.length)
       
         console.log({counter})
