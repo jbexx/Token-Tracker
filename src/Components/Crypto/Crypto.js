@@ -105,7 +105,8 @@ export default class Crypto extends Component {
           <StatusBar barStyle={ 'light-content' }/>
           <Text style={ styles.header }> Token Tracker </Text>
           <Search/>
-          <FlatList data={ filteredTokens.length > 0 ? filteredTokens : CryptoData }
+          <FlatList style={ styles.list }
+                    data={ filteredTokens.length ? filteredTokens : CryptoData }
                     renderItem={ coin => (
                       <View style={ styles.symbolPrice }>
                         <Text style={ styles.nameTxt }>{ coin.item.name }</Text>
@@ -130,6 +131,10 @@ const styles = StyleSheet.create({
     color: '#f2f2f2',
     fontSize: 17,
     marginBottom: 20
+  },
+
+  list: {
+    height: Dimensions.get('window').height
   },
 
   symbolPrice: {

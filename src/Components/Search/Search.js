@@ -41,17 +41,16 @@ export default class Search extends Component {
     const newData = [];
     let i1 = 0;
     let i2 = 0;
-    const i1Length = CryptoData.length;
+    const i1Length = sortedData.length;
     const i2Length = sortedSug.length;
 
     if (i2Length) {
 
       while (sortedData[i1].name.toLowerCase() !== sortedSug[i2].toLowerCase() && i1 < i1Length) {
         i1++
-        counter++
         
         if (sortedData[i1].name.toLowerCase() === sortedSug[i2].toLowerCase()) {
-          newData.push(CryptoData[i1])
+          newData.push(sortedData[i1])
           i2++
         }
 
