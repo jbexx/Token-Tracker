@@ -30,16 +30,30 @@ export default class Search extends Component {
   }
 
   searchTokens = () => {
+    const { CryptoData, updateStore } = this.props;
+    const { suggestions } = this.state;
     const newData = [];
+    let i1 = 0;
+    let i2 = 0;
+    const i1Length = CryptoData.length;
+    const i2Length = suggestions.length;
 
-    for (let j = 0; j < this.props.CryptoData.length; j++) {
-        for (let i = 0; i < this.state.suggestions.length; i++) {
-          if (this.props.CryptoData[j].name.toLowerCase() === this.state.suggestions[i].toLowerCase()) {
-            newData.push(this.props.CryptoData[j])
-          }
-        }
+    while (i1 < i1Length && i2Length) {
+
+      while (CryptoData[i1].name.toLowerCase() !== suggestions[i2].toLowerCase()) {
+        i1++
       }
-    return newData
+      
+      if (CryptoData[i1].name.toLowerCase() === suggestions[i2].toLowerCase()) {
+        newData.push(CryptoData[i1])
+        i1 = 0
+        i2++
+      }
+
+      if (newData.length === i2Length) {
+        return updateStore(newData)
+      }
+    } 
   }
 
   updateTokens = value => {
@@ -48,8 +62,7 @@ export default class Search extends Component {
       text: value,
       suggestions
     },
-    () => {
-      console.log('search tokens ', this.searchTokens())})
+    () => this.searchTokens())
   }
 
   render() {
