@@ -21,11 +21,6 @@ export default class Search extends Component {
     this.searchTokens = this.searchTokens.bind(this);
   }
 
-  // create an action that will update cryptodata in store
-  // with filtered results from this.trie.suggest()
-  // want action to send updated / filtered array of store
-  // and then set that new array to store as the new cryptodata
-
   componentWillReceiveProps(nextprops) {
     const trie = new Trie()
     trie.populate(
@@ -35,47 +30,16 @@ export default class Search extends Component {
   }
 
   searchTokens = () => {
-    const { CryptoData } = this.props;
-    const { suggestions } = this.state;
-    let newData = [];
-    let i1 = 0;
-    let i2 = 0;
-    let counter = 0;
-    const i1Length = CryptoData.length;
-    const i2Length = suggestions.length;
+    const newData = [];
 
-    while (i1 < i1Length ) {
-      counter++
-      console.log('the number ', i1)
-      console.log('the token ', CryptoData[i1].name.toLowerCase())
-      console.log('i2 length', i2Length)
-      console.log('newdata length', newData.length)
-      
-      while (CryptoData[i1].name.toLowerCase() !== suggestions[i2].toLowerCase()) {
-        i2++
-        if (i2 >= i2Length) {
-          i1++
-          i2 = 0
+    for (let j = 0; j < this.props.CryptoData.length; j++) {
+        for (let i = 0; i < this.state.suggestions.length; i++) {
+          if (this.props.CryptoData[j].name.toLowerCase() === this.state.suggestions[i].toLowerCase()) {
+            newData.push(this.props.CryptoData[j])
+          }
         }
       }
-      
-      // while (i2Length) {
-        if (CryptoData[i1].name.toLowerCase() === suggestions[i2].toLowerCase()) {
-          newData.push(CryptoData[i1])
-          i2++
-        }
-      // }
-
-      if (newData.length >= i2Length) {
-      console.log('newdata length when return', newData.length)
-      
-        console.log({counter})
-        return newData
-      }
-    }
-
-    // console.log({newData})
-    // this.props.updateStore(newData)    
+    return newData
   }
 
   updateTokens = value => {
@@ -86,24 +50,6 @@ export default class Search extends Component {
     },
     () => {
       console.log('search tokens ', this.searchTokens())})
-
-    // if (this.state.suggestions.length) {
-    //   console.log('search tokens ', this.searchTokens())
-    // }
-    
-    
-
-
-
-    // for (let j = 0; j < this.props.CryptoData.length; j++) {
-    //   for (let i = 0; i < this.state.suggestions.length; i++) {
-    //     if (this.props.CryptoData[j].name.toLowerCase() === this.state.suggestions[i].toLowerCase()) {
-    //       newData.push(this.props.CryptoData[j])
-    //     }
-    //   }
-    // }
-
-    // this.props.updateStore(newData)
   }
 
   render() {
