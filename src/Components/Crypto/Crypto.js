@@ -82,8 +82,9 @@ export default class Crypto extends Component {
   };
 
   render() {
-    const { CryptoData } = this.props;
+    const { CryptoData, filteredTokens } = this.props;
 
+    console.log({filteredTokens})
     const socket = new WebSocket('wss://streamer.cryptocompare.com');
 
     socket.addEventListener('message', function (event) {
@@ -104,7 +105,7 @@ export default class Crypto extends Component {
           <StatusBar barStyle={ 'light-content' }/>
           <Text style={ styles.header }> Token Tracker </Text>
           <Search/>
-          <FlatList data={ CryptoData }
+          <FlatList data={ filteredTokens ? filteredTokens : CryptoData }
                     renderItem={ coin => (
                       <View style={ styles.symbolPrice }>
                         <Text style={ styles.nameTxt }>{ coin.item.name }</Text>
