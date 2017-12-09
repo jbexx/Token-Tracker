@@ -38,22 +38,22 @@ export default class Search extends Component {
     const i1Length = CryptoData.length;
     const i2Length = suggestions.length;
 
-    while (i1 < i1Length && i2Length) {
+    if (i2Length) {
 
-      while (CryptoData[i1].name.toLowerCase() !== suggestions[i2].toLowerCase()) {
+      while (CryptoData[i1].name.toLowerCase() !== suggestions[i2].toLowerCase() && i1 < i1Length) {
         i1++
-      }
-      
-      if (CryptoData[i1].name.toLowerCase() === suggestions[i2].toLowerCase()) {
-        newData.push(CryptoData[i1])
-        i1 = 0
-        i2++
-      }
 
-      if (newData.length === i2Length) {
-        return updateStore(newData)
+        if (CryptoData[i1].name.toLowerCase() === suggestions[i2].toLowerCase()) {
+          newData.push(CryptoData[i1])
+          i1 = 0
+          i2++
+        }
+
+        if (newData.length === i2Length) {
+          return updateStore(newData)
+        }
       }
-    } 
+    }
   }
 
   updateTokens = value => {
