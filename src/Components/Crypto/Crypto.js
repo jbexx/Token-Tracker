@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {
   Text,
   View,
+  TouchableOpacity,
   FlatList,
   StatusBar,
   Dimensions,
@@ -22,6 +23,7 @@ export default class Crypto extends Component {
     }
 
     this.unpack = this.unpack.bind(this)
+    this.moreInfo = this.moreInfo.bind(this)
     // this.gatherTokens = this.gatherTokens.bind(this)
     // this.searchTokens = this.searchTokens.bind(this)
   }
@@ -35,9 +37,12 @@ export default class Crypto extends Component {
     // this.gatherTokens(nextProps, 'USDT')
   }
 
+  moreInfo() {
+    console.log('pressed')
+  }
   // gatherTokens = (base, currency) => {
   //   const tokenKeys = Object.keys(base.CryptoData);
-  //   const wantedTokens = tokenKeys.filter( token => token.split('_')[0] === currency)
+  //   const wantedTokens = tokenKeys.filter(token => token.split('_')[0] === currency)
   //   this.setState({
   //     data: wantedTokens.map( token => Object.assign({}, { pair: token }, base.CryptoData[token]))
   //   })
@@ -110,12 +115,15 @@ export default class Crypto extends Component {
                     refreshing={ false }
                     onRefresh={ () => getCryptoData() }
                     renderItem={ coin => (
+                      <TouchableOpacity activeOpacity={ .5 }
+                                        onPress={ this.moreInfo }>
                       <View style={ styles.symbolPrice }>
                         <Text style={ styles.nameTxt }>{ coin.item.name }</Text>
                         <Text style={ coin.item.percent_change_24h > 0
                           ?
                           styles.greenTxt : styles.redTxt }>{ coin.item.price_usd }</Text>
                       </View>
+                      </TouchableOpacity>
                     )}
                     keyExtractor={ coin => coin.id } />
         </View>
