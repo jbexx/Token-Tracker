@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 
 import Trie from '../../utils/trie';
+import { getCryptoData } from '../../Actions/actions';
 
 export default class Search extends Component {
   constructor() {
@@ -30,9 +31,11 @@ export default class Search extends Component {
   }
 
   searchTokens = () => {
-    const { CryptoData, updateStore } = this.props;
+    const { CryptoData, updateStore, getCryptoData } = this.props;
     const { suggestions } = this.state;
-    const sortedData = CryptoData.sort( (a, b) => {
+    // .sort alters source of truth?
+    const altData = CryptoData;
+    const sortedData = altData.sort( (a, b) => {
       if (a.id < b.id) { return -1 }
       if (a.id > b.id) { return 1 }
       return 0
@@ -44,7 +47,7 @@ export default class Search extends Component {
     const i1Length = sortedData.length;
     const i2Length = sortedSug.length;
 
-    if (i2Length) {
+    if (i2Length && i2Length !== i1Length) {
 
       while (sortedData[i1].name.toLowerCase() !== sortedSug[i2].toLowerCase() && i1 < i1Length) {
         i1++
@@ -58,6 +61,8 @@ export default class Search extends Component {
           return updateStore(newData)
         }
       }
+    } else {
+      return updateStore([])
     }
   }
 
@@ -71,7 +76,6 @@ export default class Search extends Component {
   }
 
   render() {
-    console.log('state ', this.state)
     return (
       <View>
         <TextInput style={ styles.searchBox }
@@ -87,7 +91,7 @@ export default class Search extends Component {
 
 const styles = StyleSheet.create({
   searchBox: {
-    color: '#f2f2f2',
+    color: '#bbb',
     fontSize: 15,
     height: 30,
     marginBottom: 20,
