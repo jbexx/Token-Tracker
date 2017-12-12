@@ -33,8 +33,7 @@ export default class Search extends Component {
   searchTokens = () => {
     const { CryptoData, updateStore, getCryptoData } = this.props;
     const { suggestions } = this.state;
-    // .sort alters source of truth?
-    const altData = CryptoData;
+    const altData = CryptoData.slice();
     const sortedData = altData.sort( (a, b) => {
       if (a.id < b.id) { return -1 }
       if (a.id > b.id) { return 1 }
