@@ -6,7 +6,6 @@ export const setStore = data => {
 }
 
 export const updateStore = data => {
-  console.log('data in atction ', data)
   return {
     type: 'UPDATEDCRYPTO',
     data

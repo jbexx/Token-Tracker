@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 
 import Trie from '../../utils/trie';
+import { getCryptoData } from '../../Actions/actions';
 
 export default class Search extends Component {
   constructor() {
@@ -30,30 +31,39 @@ export default class Search extends Component {
   }
 
   searchTokens = () => {
-    const { CryptoData, updateStore } = this.props;
+    const { CryptoData, updateStore, getCryptoData } = this.props;
     const { suggestions } = this.state;
+    // .sort alters source of truth?
+    const altData = CryptoData;
+    const sortedData = altData.sort( (a, b) => {
+      if (a.id < b.id) { return -1 }
+      if (a.id > b.id) { return 1 }
+      return 0
+    });
+    const sortedSug = suggestions.sort() || []
     const newData = [];
     let i1 = 0;
     let i2 = 0;
-    const i1Length = CryptoData.length;
-    const i2Length = suggestions.length;
+    const i1Length = sortedData.length;
+    const i2Length = sortedSug.length;
 
-    while (i1 < i1Length && i2Length) {
+    if (i2Length && i2Length !== i1Length) {
 
-      while (CryptoData[i1].name.toLowerCase() !== suggestions[i2].toLowerCase()) {
+      while (sortedData[i1].name.toLowerCase() !== sortedSug[i2].toLowerCase() && i1 < i1Length) {
         i1++
-      }
-      
-      if (CryptoData[i1].name.toLowerCase() === suggestions[i2].toLowerCase()) {
-        newData.push(CryptoData[i1])
-        i1 = 0
-        i2++
-      }
+        
+        if (sortedData[i1].name.toLowerCase() === sortedSug[i2].toLowerCase()) {
+          newData.push(sortedData[i1])
+          i2++
+        }
 
-      if (newData.length === i2Length) {
-        return updateStore(newData)
+        if (newData.length === i2Length) {
+          return updateStore(newData)
+        }
       }
-    } 
+    } else {
+      return updateStore([])
+    }
   }
 
   updateTokens = value => {
@@ -66,7 +76,6 @@ export default class Search extends Component {
   }
 
   render() {
-    console.log('state ', this.state)
     return (
       <View>
         <TextInput style={ styles.searchBox }
@@ -82,7 +91,7 @@ export default class Search extends Component {
 
 const styles = StyleSheet.create({
   searchBox: {
-    color: '#f2f2f2',
+    color: '#bbb',
     fontSize: 15,
     height: 30,
     marginBottom: 20,

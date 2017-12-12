@@ -17,7 +17,8 @@ export default class Crypto extends Component {
     super()
 
     this.state = {
-      data: []
+      data: [],
+      refreshing: false
     }
 
     this.unpack = this.unpack.bind(this)
@@ -82,8 +83,8 @@ export default class Crypto extends Component {
   };
 
   render() {
-    const { CryptoData } = this.props;
-
+    const { CryptoData, filteredTokens, getCryptoData } = this.props;
+    const { refreshing } = this.state;
     const socket = new WebSocket('wss://streamer.cryptocompare.com');
 
     socket.addEventListener('message', function (event) {
@@ -104,7 +105,10 @@ export default class Crypto extends Component {
           <StatusBar barStyle={ 'light-content' }/>
           <Text style={ styles.header }> Token Tracker </Text>
           <Search/>
-          <FlatList data={ CryptoData }
+          <FlatList style={ styles.list }
+                    data={ filteredTokens.length ? filteredTokens : CryptoData }
+                    refreshing={ false }
+                    onRefresh={ () => getCryptoData() }
                     renderItem={ coin => (
                       <View style={ styles.symbolPrice }>
                         <Text style={ styles.nameTxt }>{ coin.item.name }</Text>
@@ -126,34 +130,42 @@ const styles = StyleSheet.create({
 
   header: {
     alignSelf: 'center',
+    fontFamily: 'Ubuntu',    
     color: '#f2f2f2',
-    fontSize: 17,
+    fontSize: 20,
     marginBottom: 20
+  },
+
+  list: {
+    height: Dimensions.get('window').height
   },
 
   symbolPrice: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     height: Dimensions.get('window').height/20,
-    width: Dimensions.get('window').width,
+    width: Dimensions.get('window').width,    
     marginBottom: 20,
     paddingLeft: 10,
     paddingRight: 10
   },
 
+  nameTxt: {
+    color: '#f2f2f2',
+    fontFamily: 'Ubuntu-Light',
+    fontSize: 20
+  },
+
   greenTxt: {
     color: '#27FF93',
-    fontSize: 17
+    fontFamily: 'Ubuntu-Light',    
+    fontSize: 20
   },
 
   redTxt: {
-    color: '#FF2727',
-    fontSize: 17
-  },
-
-  nameTxt: {
-    color: '#f2f2f2',
-    fontSize: 17
+    color: '#FF0044',
+    fontFamily: 'Ubuntu-Light',    
+    fontSize: 20
   }
 
 })
