@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 
 import Search from '../Search/SearchContainer';
+import Coin from '../Coin/CoinContainer';
 
 import io from 'socket.io-client';
 
@@ -38,7 +39,7 @@ export default class Crypto extends Component {
   }
 
   moreInfo() {
-    console.log('pressed')
+    
   }
   // gatherTokens = (base, currency) => {
   //   const tokenKeys = Object.keys(base.CryptoData);

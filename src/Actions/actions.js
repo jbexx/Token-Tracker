@@ -13,10 +13,13 @@ export const updateStore = data => {
 }
 
 export const getCryptoData = () => {
-  return dispatch => {
-    fetch('https://api.coinmarketcap.com/v1/ticker/')
-    .then( response => response.json())
-    .then( data => dispatch(setStore(data)))
-    .catch( error => console.log(error))
+  return async dispatch => {
+    try {
+      const response = await fetch('https://api.coinmarketcap.com/v1/ticker/')
+      const data = await response.json()
+      dispatch(setStore(data))
+    } catch (error) { 
+      console.log({ error })
+    }
   }
 }
