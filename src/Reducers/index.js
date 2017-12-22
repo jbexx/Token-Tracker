@@ -28,7 +28,7 @@ const nav = (state = initialNavState, action) => {
         state
       );
       break;
-    case 'Coin':
+    case 'Token':
       nextState = AppNavigator.router.getStateForAction(
         NavigationActions.back(),
         state

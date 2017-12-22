@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 
 import Search from '../Search/SearchContainer';
-import Coin from '../Coin/CoinContainer';
+import Token from '../Token/TokenContainer';
 
 import io from 'socket.io-client';
 
@@ -39,8 +39,10 @@ export default class Crypto extends Component {
   }
 
   moreInfo() {
-    
+    console.log({navigation})
+    // navigation.dispatch({ type: 'token' })
   }
+  
   // gatherTokens = (base, currency) => {
   //   const tokenKeys = Object.keys(base.CryptoData);
   //   const wantedTokens = tokenKeys.filter(token => token.split('_')[0] === currency)
@@ -106,6 +108,8 @@ export default class Crypto extends Component {
     //   }
     // })
 
+    //give rendered flatlist item a data attribute? if so give the index of the array 
+    //so that when clicked can find in the original array and get specific data
     return (
         <View style={ styles.container }>
           <StatusBar barStyle={ 'light-content' }/>

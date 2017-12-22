@@ -3,11 +3,11 @@ import { connect } from 'react-redux';
 import { addNavigationHelpers, StackNavigator } from 'react-navigation';
 
 import Crypto from './Components/Crypto/Crypto';
-import Coin from './Components/Coin/Coin';
+import Token from './Components/Token/Token';
 
 export const AppNavigator = StackNavigator({
   Main: { screen: Crypto },
-  Details: { screen: Coin },
+  Details: { screen: Token },
 });
 
 const AppWithNavigationState = ({ dispatch, nav }) => (
