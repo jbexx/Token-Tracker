@@ -39,8 +39,7 @@ export default class Crypto extends Component {
   }
 
   moreInfo() {
-    console.log({navigation})
-    // navigation.dispatch({ type: 'token' })
+
   }
   
   // gatherTokens = (base, currency) => {
@@ -108,7 +107,7 @@ export default class Crypto extends Component {
     //   }
     // })
 
-    //give rendered flatlist item a data attribute? if so give the index of the array 
+    //give rendered flatlist item a data attribute? if so give the index (coin.index) of the array 
     //so that when clicked can find in the original array and get specific data
     return (
         <View style={ styles.container }>
@@ -134,6 +133,10 @@ export default class Crypto extends Component {
         </View>
     );
   }
+}
+
+Crypto.navigationOptions = {
+  title: 'Main'
 }
 
 const styles = StyleSheet.create({
